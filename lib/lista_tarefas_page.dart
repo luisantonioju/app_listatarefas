@@ -8,7 +8,7 @@ class ListaTarefasPage extends StatelessWidget {
     final List<Map<String, dynamic>> tarefas = [
       {'titulo': 'Fazer Compras', 'situacao': false},
       {'titulo': 'Pagar Conta de Luz', 'situacao': true},
-      {'titulo': 'Revisar aula de TI', 'situacao': false},
+      {'titulo': 'Revisar aula de TI', 'situacao': true},
       {'titulo': 'Pagar Fatura do Inter', 'situacao': false},
       {'titulo': 'Levar carro na manutenção', 'situacao': false},
     ];
@@ -18,29 +18,34 @@ class ListaTarefasPage extends StatelessWidget {
         title: const Text("Minhas Tarefas"),
         centerTitle: true,
       ),
-      body: ListView(
+      body: ListView.builder(
         padding: EdgeInsets.all(12),
-        children: [
-          Card(
+        itemCount: tarefas.length,
+        itemBuilder: (context, index) {
+          final tarefa = tarefas[index];
+          final bool situacao = tarefa['situacao'];
+          return Card(
             child: ListTile(
               leading: Icon(
-                Icons.check_circle,
-                color: Colors.green,
+                situacao ? Icons.check_circle : Icons.circle_outlined,
+                color: situacao ? Colors.green : Colors.grey,
               ),
               title: Text(
-                'Configurar o ambiente de desenvolvimento',
+                tarefa['titulo'],
                 style: TextStyle(
-                  decoration: TextDecoration.lineThrough,
+                  decoration: situacao
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
                 ),
               ),
-              subtitle: Text('Concluída'),
+              subtitle: Text(situacao ? 'Concluída' : 'Pendente'),
               trailing: Icon(
                 Icons.delete_outline,
                 color: Colors.grey,
               ),
             ),
-          ),
-        ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
