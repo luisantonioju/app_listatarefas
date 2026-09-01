@@ -5,6 +5,14 @@ class ListaTarefasPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> tarefas = [
+      {'titulo': 'Fazer Compras', 'situacao': false},
+      {'titulo': 'Pagar Conta de Luz', 'situacao': true},
+      {'titulo': 'Revisar aula de TI', 'situacao': false},
+      {'titulo': 'Pagar Fatura do Inter', 'situacao': false},
+      {'titulo': 'Levar carro na manutenção', 'situacao': false},
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Minhas Tarefas"),
