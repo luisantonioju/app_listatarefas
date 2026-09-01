@@ -38,7 +38,7 @@ class ListaTarefasPage extends StatelessWidget {
                       : TextDecoration.none,
                 ),
               ),
-              subtitle: Text(situacao ? 'Concluída' : 'Pendentee'),
+              subtitle: Text(situacao ? 'Concluída' : 'Pendente'),
               trailing: Icon(
                 Icons.delete_outline,
                 color: Colors.grey,
