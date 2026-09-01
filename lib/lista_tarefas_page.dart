@@ -40,41 +40,6 @@ class ListaTarefasPage extends StatelessWidget {
               ),
             ),
           ),
-          Card(
-            child: ListTile(
-              leading: Icon(
-                Icons.circle_outlined,
-                color: Colors.grey,
-              ),
-              title: Text(
-                'fazer a atividade flutter',
-              ),
-              subtitle: Text('Pendente'),
-              trailing: Icon(
-                Icons.delete_outline,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Icon(
-                Icons.check_circle,
-                color: Colors.green,
-              ),
-              title: Text(
-                'Fiz 126 perguntas no Sumário documentado da Alexandra',
-                style: TextStyle(
-                  decoration: TextDecoration.lineThrough,
-                ),
-              ),
-              subtitle: Text('Concluída'),
-              trailing: Icon(
-                Icons.delete_outline,
-                color: Colors.grey,
-              ),
-            ),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
