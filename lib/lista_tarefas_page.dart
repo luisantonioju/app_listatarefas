@@ -49,7 +49,16 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
               child: Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (novaTarefaController.text.isNotEmpty) {
+                  await DatabaseHelper.inserirTarefa(novaTarefaController.text);
+                  carregarTarefas();
+
+                  if (!context.mounted) return;
+
+                  Navigator.pop(context);
+                }
+              },
               child: Text('Adicionar'),
             ),
           ],
@@ -74,7 +83,7 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
               itemCount: tarefas.length,
               itemBuilder: (context, index) {
                 final tarefa = tarefas[index];
-                final bool situacao = tarefa['situacao'];
+                final bool situacao = tarefa['situacao'] == 1;
                 return Card(
                   child: ListTile(
                     leading: Icon(
