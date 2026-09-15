@@ -24,6 +24,20 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
     });
   }
 
+  Future<void> marcarSituacao(int index) async {
+    final tarefa = tarefas[index];
+    final novovalor = tarefa['situacao'] == 1 ? 0 : 1;
+
+    await DatabaseHelper.atualizarTarefa(tarefa['id'], novovalor);
+    carregarTarefas();
+  }
+
+  Future<void> deletarTarefa(int index) async {
+    final tarefa = tarefas[index];
+    await DatabaseHelper.deletarTarefa(tarefa['id']);
+    carregarTarefas();
+  }
+
   void adicionarTarefa() {
     final novaTarefaController = TextEditingController();
     showDialog(
@@ -86,9 +100,12 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
                 final bool situacao = tarefa['situacao'] == 1;
                 return Card(
                   child: ListTile(
-                    leading: Icon(
-                      situacao ? Icons.check_circle : Icons.circle_outlined,
-                      color: situacao ? Colors.green : Colors.grey,
+                    leading: GestureDetector(
+                      onTap: () => marcarSituacao(index),
+                      child: Icon(
+                        situacao ? Icons.check_circle : Icons.circle_outlined,
+                        color: situacao ? Colors.green : Colors.grey,
+                      ),
                     ),
                     title: Text(
                       tarefa['titulo'],
@@ -99,9 +116,12 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
                       ),
                     ),
                     subtitle: Text(situacao ? 'Concluída' : 'Pendente'),
-                    trailing: Icon(
-                      Icons.delete_outline,
-                      color: Colors.grey,
+                    trailing: GestureDetector(
+                      onTap: () => deletarTarefa(index),
+                      child: Icon(
+                        Icons.delete_outline,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 );

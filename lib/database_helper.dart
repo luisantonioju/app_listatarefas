@@ -15,7 +15,7 @@ class DatabaseHelper {
         return db.execute(
           'CREATE TABLE tarefas ('
           'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-          'titulo TEXT'
+          'titulo TEXT,'
           'situacao INTEGER' //0 = false, 1 = true
           ')',
         );
@@ -44,5 +44,26 @@ class DatabaseHelper {
       'titulo': titulo,
       'situacao': 0,
     });
+  }
+
+  //UPDATE Atualização da situação da Tarefa
+  static Future<void> atualizarTarefa(int id, int situacao) async {
+    final db = await DatabaseHelper.database;
+    await db.update(
+      'tarefas',
+      {'situacao': situacao},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  //DELETE: Deletar uma tarefa do banco de dados
+  static Future<void> deletarTarefa(int id) async {
+    final db = await DatabaseHelper.database;
+    await db.delete(
+      'tarefas',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
