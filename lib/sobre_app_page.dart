@@ -33,7 +33,10 @@ class SobreAppPage extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Text("Versão 1.0.0"),
+              Text(
+                "Versão 1.0.0",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
