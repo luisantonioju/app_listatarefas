@@ -13,6 +13,7 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
   List<Map<String, dynamic>> tarefas = [];
 
   String? filtroAtual;
+  static const categorias = ['Pessoal', 'Trabalho', 'Estudos', 'Compras'];
 
   @override
   void initState() {
@@ -49,42 +50,69 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
 
   void adicionarTarefa() {
     final novaTarefaController = TextEditingController();
+    String categoriaEscolhida = categorias.first;
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Nova tarefa'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: novaTarefaController,
-                decoration: InputDecoration(hintText: 'Digite o título...'),
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text('Nova tarefa'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: novaTarefaController,
+                    decoration: InputDecoration(hintText: 'Digite o título...'),
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  DropdownButton<String>(
+                    value: categoriaEscolhida,
+                    isExpanded: true,
+                    items: categorias.map((categoria) {
+                      return DropdownMenuItem(
+                        value: categoria,
+                        child: Text(categoria),
+                      );
+                    }).toList(),
+                    onChanged: (novaCategoria) {
+                      setStateDialog(() {
+                        categoriaEscolhida = novaCategoria!;
+                      });
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                //Função pra fechar qualquer janela/tela
-                Navigator.pop(context);
-              },
-              child: Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (novaTarefaController.text.isNotEmpty) {
-                  await DatabaseHelper.inserirTarefa(novaTarefaController.text);
-                  carregarTarefas();
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    //Função pra fechar qualquer janela/tela
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (novaTarefaController.text.isNotEmpty) {
+                      await DatabaseHelper.inserirTarefa(
+                        novaTarefaController.text,
+                        categoriaEscolhida,
+                      );
+                      carregarTarefas();
 
-                  if (!context.mounted) return;
+                      if (!context.mounted) return;
 
-                  Navigator.pop(context);
-                }
-              },
-              child: Text('Adicionar'),
-            ),
-          ],
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text('Adicionar'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -155,6 +183,7 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
               itemBuilder: (context, index) {
                 final tarefa = tarefas[index];
                 final bool situacao = tarefa['situacao'] == 1;
+                final String categoria = tarefa['categoria'] ?? 'Sem Categoria';
                 return Card(
                   child: ListTile(
                     leading: GestureDetector(
@@ -172,7 +201,9 @@ class _ListaTarefasPageState extends State<ListaTarefasPage> {
                             : TextDecoration.none,
                       ),
                     ),
-                    subtitle: Text(situacao ? 'Concluída' : 'Pendente'),
+                    subtitle: Text(
+                      '${situacao ? 'Concluída' : 'Pendente'} - $categoria',
+                    ),
                     trailing: GestureDetector(
                       onTap: () => deletarTarefa(index),
                       child: Icon(
